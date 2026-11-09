@@ -9,108 +9,92 @@
 
 ## 📋 Table of Contents
 
+- [Sector Overview & Market Dynamics](#-sector-overview--market-dynamics)
 - [SaaS / Hosted Platforms](#-saas--hosted-platforms)
-  - [BrowserStack Test Observability](#browserstack-test-observability)
-  - [Datadog Log Management](#datadog-log-management)
-  - [Splunk Cloud](#splunk-cloud)
-  - [Sumo Logic](#sumo-logic)
-  - [Mezmo (LogDNA)](#mezmo-logdna)
-  - [Papertrail](#papertrail)
-  - [Better Stack Logs](#better-stack-logs)
-  - [Coralogix](#coralogix)
 - [Open-Source Software](#-open-source-software)
-  - [Graylog](#graylog)
-  - [Elastic Stack (ELK)](#elastic-stack-elk)
-  - [Fluentd](#fluentd)
 - [Comparison at a Glance](#-comparison-at-a-glance)
 - [Contributing](#-contributing)
 
 ---
 
+## 🌐 Sector Overview & Market Dynamics
+
+The global log management and telemetry analysis sector is currently estimated at approximately **$3.7B to $4.3B USD** and is projected to expand toward **$8B to $10B USD** over the next decade at a CAGR of 11%–15%, driven by exponential CI/CD test volume growth, cloud-native architectures, and compliance mandates. The market is **moderately fragmented** across mid-tier developer log utilities and open-source collectors, but is experiencing rapid **consolidation into concentrated enterprise giants** (e.g., Cisco's $28B acquisition of Splunk, and large-scale SIEM/observability suite expansions) where comprehensive end-to-end platforms increasingly capture high-value enterprise accounts.
+
+---
+
 ## 🟦 SaaS / Hosted Platforms
 
-Commercial, cloud-hosted Test Execution Log Aggregation and Analysis platforms. These are not open-source but are included as reference points for feature comparison.
+Commercial, cloud-hosted Test Execution Log Aggregation and Analysis platforms, sorted in descending order of company size (valuation / revenue).
 
-### BrowserStack Test Observability
-**Type:** Test-specific log aggregation and debugging
-BrowserStack Test Observability is purpose-built for test execution logs, consolidating screenshot, video, test framework, terminal, and application logs chronologically into a single view so teams do not need to return to CI console logs [citation:1]. It instruments tests via the BrowserStack SDK to automatically collect test data, logs, screenshots, CI information, and Git metadata without manual setup [citation:1]. Key capabilities include auto-tagging failures into flaky, always-failing, and new failures; AI-based triage into product, automation, or environment issues; and historical execution status for each test [citation:1]. **Critical distinction:** This is test observability, not application observability — it identifies, monitors, and debugs test cases and suite health rather than application bugs [citation:1].
-
-### Datadog Log Management
-**Type:** General log management with test correlation potential
-Datadog Logs ingests from application stdout, Fluent Bit, Vector, Agent, or OTLP, routes through Log Pipelines for parsing and tagging, then optionally indexes for fast query or archives to S3/GCS/Azure Blob for cheap retention [citation:2][citation:13]. The cost model has two axes: ingestion (cheap, per-GB) and indexed events (expensive, ~$1.70/M as of 2026) [citation:2]. For test execution logs, Datadog's value lies in correlating test output with application traces, metrics, and logs from the same pipeline. **Important:** Datadog is not test-aware — it does not understand test sessions, builds, or framework semantics. It treats test logs as generic application logs.
-
-### Splunk Cloud
-**Type:** Enterprise log indexing and SIEM
-Splunk Cloud is the managed Splunk Enterprise platform with schema-on-read indexing, SPL queries, and hot/warm/cold/frozen storage tiering [citation:14]. It is the canonical SIEM substrate for enterprise SOC workflows and multi-year retention requirements (PCI 1yr+, SOX 7yr) [citation:14]. For test logs, Splunk's value is in enterprise-wide log correlation across infrastructure, applications, and security events. **Trade-off:** Per-GB licensing can become expensive at test-log volume, and Splunk is not test-session-aware.
-
-### Sumo Logic
-**Type:** Cloud-native log analytics and SIEM
-Sumo Logic provides unlimited users with automated anomaly detection, log volume patterns, and log-to-metric correlation for root cause analysis [citation:4][citation:15]. The Enterprise Suite adds cloud-native SIEM with MITRE ATT&CK-mapped threat detection and UEBA coverage [citation:4]. The DojoAI add-on includes a Mobot conversational interface for natural language log analysis and a Root Cause Agent (in development) that correlates logs and metrics for incident resolution [citation:4].
-
-### Mezmo (LogDNA)
-**Type:** Telemetry pipeline with AI-ready context
-Mezmo provides telemetry pipelines that ingest and transform high-volume logs, metrics, and traces via Mezmo Edge, OpenTelemetry, or direct connection [citation:6]. It emphasizes **AI-ready context**: automatic clustering of related events and deduplication/enrichment before telemetry reaches any model, reducing noise and preventing hallucinations [citation:6]. Agentic root cause analysis is included in the platform license (no metered AI queries), and the platform is model-agnostic via MCP [citation:6]. **Trade-off:** Mezmo is a general telemetry pipeline, not test-specific.
-
-### Papertrail
-**Type:** Cloud-hosted log management for troubleshooting
-Papertrail provides cloud-hosted log management starting at $7/month with a free plan available [citation:7]. It consolidates logs in one place with typically minutes to set up, supports tailing logs from one location via CLI, and automatically parses events into individual data tokens [citation:7]. Positioned for faster troubleshooting of infrastructure and application issues rather than test-specific analytics.
-
-### Better Stack Logs
-**Type:** Log aggregation with SQL querying
-Better Stack Logs aggregates structured logs and traces from anywhere, with VRL transformation and drag-and-drop, PromQL, or SQL querying [citation:9]. Pricing includes a Nano bundle at $25/month (22% off yearly) with 30-day retention [citation:9]. Features include anomaly detection alerts, real-time live tail, incident management, and long-term archival to S3 [citation:9]. **Trade-off:** Not test-aware; treats test logs as generic log events.
-
-### Coralogix
-**Type:** Full-stack observability with in-stream analysis
-Coralogix provides logs at $0.52/GB, traces at $0.44/GB, and metrics at $0.05/GB with unlimited users, hosts, and sources [citation:10]. It emphasizes **in-stream analysis** — querying logs, traces, metrics, and security events without expensive indexing or surprise fees [citation:10]. Positioned for teams wanting predictable costs and unified querying across telemetry types, though not test-session-aware.
+| Software | Company Size (Valuation / Revenue) | Starting Price | Free Tier Limits / Trial Limits | Type |
+|---|---|---|---|---|
+| **Datadog Log Management** | ~$68B Market Cap / ~$4.3B TTM Revenue | Ingest: $0.10/GB; Searchable retention: $1.06–$2.50+ per 1M log events/mo | 14-day free trial with full access to log ingestion & indexing; no permanent free tier for log explorer (free tier covers 5 infra hosts only) | General log management & APM test correlation |
+| **Splunk Cloud** | $28B (Acquired by Cisco) / ~$3.9B Annual Revenue | Custom quote / Workload SVC model (or ~$1,200–$2,000+ per GB/day/yr list rate) | 14-day free trial limited to 5 GB/day ingest (or perpetual on-prem Splunk Free capped at 500 MB/day) | Enterprise log indexing, compliance & SIEM |
+| **BrowserStack Test Observability** | $4.0B Valuation / ~$200M–$225M ARR | Pro starts at ~$0.0079 per test execution (usage-based) | Unlimited Free Plan: free test log aggregation & basic flaky detection for CI runs; 30–60 min cap applies if using automated device cloud | Dedicated test execution log debugging & analytics |
+| **Sumo Logic** | $1.7B (Acquired by Francisco Partners) / ~$300M Revenue | Essentials credit tier starts at ~$0.15 per credit (flexible consumption) | 30-day free trial with up to 5 GB/day burst ingestion and full dashboard access; no credit card required | Cloud-native log analytics & DojoAI root cause |
+| **Coralogix** | $1.6B Valuation / ~$90M+ ARR | In-stream logs start at $0.42/GB (monitoring at ~$0.50/GB, archive at $0.17/GB) | 14-day free trial with unrestricted access to all ingestion pipelines, unlimited users and data sources; no permanent free tier | Full-stack observability with in-stream log analysis |
+| **Mezmo (LogDNA)** | $370M Valuation / ~$34M ARR | Data ingestion: $0.20/GB; 30-day retention: $0.20/GB/month | 30-day free trial of telemetry pipelines and parsing rules; custom usage quotas configurable in app | Telemetry pipeline with AI-ready log context |
+| **Better Stack Logs** | ~$74M–$93M Valuation / ~$3.5M–$3.8M ARR | Nano bundle starts at $25/month (or $0.10/GB ingest + $0.05–$0.10/GB retention) | Free forever plan: 3 GB logs/month with 3-day retention, 3 GB traces, and 10 uptime monitors | ClickHouse-backed structured log querying & SQL |
+| **Papertrail** | SolarWinds Subsidiary / ~$150K–$1M Niche Run-rate | Starting tier: $5.00/month for 1 GB log transfer | Free forever plan: 50 MB log transfer per month (with 48-hour search retention and 7-day archive) | Cloud log management & CLI live-tailing |
 
 ---
 
 ## 🟩 Open-Source Software
 
-Self-hosted, community-driven Log Aggregation and Analysis tools. The open-source ecosystem is strong for **general log management** but lacks dedicated **test execution log aggregation** platforms comparable to BrowserStack Test Observability.
+Self-hosted, community-driven log management, aggregation, and test reporting tools. Sorted by GitHub star count in descending order.
 
-### Graylog
-**Stack:** Java / MongoDB / Elasticsearch/OpenSearch | **License:** GPLv3 (Open) / Commercial (Enterprise/Security)
-Graylog Open is a powerful self-managed log management solution with a free tier that many teams find sufficient [citation:8]. The paid Enterprise and Security editions add automation, deeper visibility, and compliance features. A key differentiator is **Intelligent Data Management**: route processed lower-priority data to a built-in data lake that doesn't count toward license, with Data-Lake-Preview to search standby data before bringing it into active storage [citation:8]. Graylog Illuminate provides ready-to-use parsers, dashboards, alerts, and detection rules for common platforms [citation:8]. **Trade-off:** General log management, not test-specific.
-
-### Elastic Stack (ELK)
-**Stack:** Java / Elasticsearch / Logstash / Kibana | **License:** Elastic License 2.0 / SSPL / AGPL (tri-licensed)
-The Elastic Stack (Elasticsearch, Logstash, Kibana) is the most widely deployed open-source log analysis platform [citation:11]. Logstash is an open-source data collection engine with real-time pipelining that unifies data from disparate sources and normalizes it to destinations of your choice [citation:5]. Kibana provides extensive visualization options including time series, maps, heat maps, and data tables [citation:11]. **Important caveats:** The Elastic Stack is under the Elastic License 2.0 (not OSI-approved open source), and self-hosted use is free but offering Elasticsearch as a managed service to third parties is not permitted under the free tier [citation:11]. Operational overhead is real — Elasticsearch clusters require memory planning, shard management, and index lifecycle policies, often requiring a dedicated platform engineer at scale [citation:11].
-
-### Fluentd
-**Stack:** Ruby / C | **License:** Apache 2.0
-Fluentd is an open-source data collector designed to unify log ingestion and routing across heterogeneous infrastructure [citation:11]. It accepts log events from sources, applies optional processing, and routes them to destinations — **it does not store or analyze logs itself** [citation:11]. Fluentd is typically the first layer in a larger pipeline: agents collect logs, buffer them locally (so nothing is lost if downstream is unavailable), apply parsing/filtering, and forward to Elasticsearch, Splunk, or another storage backend [citation:11]. **Important distinction:** For Kubernetes environments, Fluent Bit is often the better choice — roughly a 4 MB binary versus Fluentd's heavier Ruby-based process, with built-in backpressure handling and dynamic metadata injection [citation:11]. Fluentd is the better fit when you need the full 500+ plugin ecosystem or complex routing logic [citation:11].
+| Software | Stars | Stack | License | Description |
+|---|---|---|---|---|
+| [**Elasticsearch**](https://github.com/elastic/elasticsearch) | [![GitHub stars](https://img.shields.io/github/stars/elastic/elasticsearch?style=social&color=white)](https://github.com/elastic/elasticsearch/stargazers) | Java | Elastic License 2.0 / SSPL | Distributed, RESTful search and analytics engine powering the ELK stack for enterprise log indexing. |
+| [**SigNoz**](https://github.com/SigNoz/signoz) | [![GitHub stars](https://img.shields.io/github/stars/SigNoz/signoz?style=social&color=white)](https://github.com/SigNoz/signoz/stargazers) | Go, TypeScript, ClickHouse | Apache 2.0 / Commercial | OpenTelemetry-native observability platform providing unified logs, traces, and metrics with ClickHouse storage. |
+| [**Grafana Loki**](https://github.com/grafana/loki) | [![GitHub stars](https://img.shields.io/github/stars/grafana/loki?style=social&color=white)](https://github.com/grafana/loki/stargazers) | Go | AGPL-3.0 | Like Prometheus, but for logs. Indexes only metadata/labels to dramatically lower storage and ingestion costs. |
+| [**OpenObserve**](https://github.com/openobserve/openobserve) | [![GitHub stars](https://img.shields.io/github/stars/openobserve/openobserve?style=social&color=white)](https://github.com/openobserve/openobserve/stargazers) | Rust | AGPL-3.0 | High-performance, cloud-native observability platform for logs, metrics, and traces with ultra-low storage footprint. |
+| [**Vector**](https://github.com/vectordotdev/vector) | [![GitHub stars](https://img.shields.io/github/stars/vectordotdev/vector?style=social&color=white)](https://github.com/vectordotdev/vector/stargazers) | Rust | MPL-2.0 | Ultra-fast, lightweight observability data pipeline for collecting, transforming, and routing logs and test telemetry. |
+| [**Fluentd**](https://github.com/fluent/fluentd) | [![GitHub stars](https://img.shields.io/github/stars/fluent/fluentd?style=social&color=white)](https://github.com/fluent/fluentd/stargazers) | Ruby, C | Apache 2.0 | CNCF-graduated open-source data collector offering unified logging and 500+ ecosystem routing plugins. |
+| [**Fluent Bit**](https://github.com/fluent/fluent-bit) | [![GitHub stars](https://img.shields.io/github/stars/fluent/fluent-bit?style=social&color=white)](https://github.com/fluent/fluent-bit/stargazers) | C | Apache 2.0 | Fast, super-lightweight log processor and forwarder (~4MB binary) ideal for container and Kubernetes CI pipelines. |
+| [**Graylog**](https://github.com/Graylog2/graylog2-server) | [![GitHub stars](https://img.shields.io/github/stars/Graylog2/graylog2-server?style=social&color=white)](https://github.com/Graylog2/graylog2-server/stargazers) | Java, MongoDB, OpenSearch | GPLv3 (Open) / Commercial | Scalable self-managed log management and SIEM platform with built-in data pipelining and intelligent routing. |
+| [**OpenTelemetry Collector**](https://github.com/open-telemetry/opentelemetry-collector) | [![GitHub stars](https://img.shields.io/github/stars/open-telemetry/opentelemetry-collector?style=social&color=white)](https://github.com/open-telemetry/opentelemetry-collector/stargazers) | Go | Apache 2.0 | Vendor-agnostic proxy to receive, process, and export test telemetry, traces, metrics, and logs. |
+| [**Allure Report**](https://github.com/allure-framework/allure2) | [![GitHub stars](https://img.shields.io/github/stars/allure-framework/allure2?style=social&color=white)](https://github.com/allure-framework/allure2/stargazers) | Java | Apache 2.0 | Multi-language test reporting framework extracting rich execution details, logs, screenshots, and test failure timelines. |
+| [**ReportPortal**](https://github.com/reportportal/reportportal) | [![GitHub stars](https://img.shields.io/github/stars/reportportal/reportportal?style=social&color=white)](https://github.com/reportportal/reportportal/stargazers) | Java, React, PostgreSQL | Apache 2.0 | AI-powered test automation analytics server for real-time test execution result aggregation, logging, and failure categorization. |
 
 ---
 
 ## 📊 Comparison at a Glance
 
 | Software | License | Type | Test-Aware | Self-Hosted | Best For |
-|----------|---------|------|------------|-------------|----------|
-| **BrowserStack Test Observability** | Proprietary | Test log aggregation | ✅ | ❌ | Consolidated test debugging |
-| **Datadog Logs** | Proprietary | General log management | ❌ | ❌ | App + test correlation |
-| **Splunk Cloud** | Proprietary | Enterprise log/SIEM | ❌ | ❌ | Compliance + SIEM |
-| **Sumo Logic** | Proprietary | Cloud log analytics | ❌ | ❌ | Anomaly detection + SIEM |
-| **Mezmo** | Proprietary | Telemetry pipeline | ❌ | ❌ | AI-ready log context |
-| **Papertrail** | Proprietary | Simple log management | ❌ | ❌ | Fast troubleshooting |
-| **Better Stack** | Proprietary | Log aggregation | ❌ | ❌ | SQL log querying |
-| **Coralogix** | Proprietary | Full-stack observability | ❌ | ❌ | Predictable cost + in-stream |
-| **Graylog** | GPLv3 (Open) | Log management | ❌ | ✅ | Open-source log platform |
-| **Elastic Stack** | Elastic License 2.0 | Log analysis | ❌ | ✅ | Most deployed OSS log stack |
-| **Fluentd** | Apache 2.0 | Log collector/router | ❌ | ✅ | Pipeline collection layer |
+|---|---|---|---|---|---|
+| **BrowserStack Test Observability** | Proprietary | Test log aggregation | ✅ | ❌ | Consolidated test debugging & flaky triage |
+| **ReportPortal** | Apache 2.0 | Test analytics & logs | ✅ | ✅ | Open-source test execution reporting & AI triage |
+| **Allure Report** | Apache 2.0 | Test reporting & logs | ✅ | ✅ | Rich graphical test reports & execution logs |
+| **Datadog Logs** | Proprietary | General log management | ❌ | ❌ | App + CI pipeline log correlation |
+| **Splunk Cloud** | Proprietary | Enterprise log/SIEM | ❌ | ❌ | Multi-year retention & enterprise SIEM |
+| **Sumo Logic** | Proprietary | Cloud log analytics | ❌ | ❌ | Anomaly detection & DojoAI root cause |
+| **Mezmo** | Proprietary | Telemetry pipeline | ❌ | ❌ | AI-ready telemetry routing & deduplication |
+| **Better Stack** | Proprietary | Structured log aggregation | ❌ | ❌ | ClickHouse SQL log querying & status monitoring |
+| **Coralogix** | Proprietary | Full-stack observability | ❌ | ❌ | Predictable cost & in-stream log analysis |
+| **Papertrail** | Proprietary | Simple log tailing | ❌ | ❌ | Lightweight instant log troubleshooting |
+| **Elasticsearch (ELK)** | Elastic License 2.0 | Full-text log indexing | ❌ | ✅ | Highly customizable enterprise search & log stack |
+| **SigNoz** | Apache 2.0 / Commercial | Full-stack observability | ❌ | ✅ | OpenTelemetry-native log, metric & trace platform |
+| **Grafana Loki** | AGPL-3.0 | Label-indexed log storage | ❌ | ✅ | Cost-effective log storage paired with Grafana |
+| **OpenObserve** | AGPL-3.0 | Cloud-native observability | ❌ | ✅ | High-efficiency log, metric, trace alternative |
+| **Vector** | MPL-2.0 | High-throughput data router | ❌ | ✅ | Ultra-fast log pipeline collection & parsing |
+| **Graylog** | GPLv3 (Open) | Centralized log server | ❌ | ✅ | Reliable open-source log aggregation & search |
+| **Fluentd / Fluent Bit** | Apache 2.0 | Log collectors / routers | ❌ | ✅ | Kubernetes and server-side log forwarding layer |
+| **OpenTelemetry Collector**| Apache 2.0 | Telemetry pipeline proxy | ❌ | ✅ | Standardized telemetry collection & routing |
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! If you know of an open-source Test Execution Log Aggregation or Analysis tool that should be listed here, please open a pull request with:
+Contributions are welcome! If you know of an open-source or commercial Test Execution Log Aggregation or Analysis tool that should be listed here, please open a pull request with:
 
 - Project name and URL
 - Brief description (1–2 sentences)
 - Stack and license
 - Why it stands out
 
-Please ensure the project is actively maintained (releases within the last 12 months) and genuinely open-source. Note that the open-source ecosystem for **test-aware log aggregation** is essentially nonexistent — available tools (Graylog, ELK, Fluentd) are general-purpose log management platforms that can ingest test logs but do not understand test sessions, builds, or framework semantics. BrowserStack Test Observability remains the most purpose-built solution for test execution log consolidation, while commercial log platforms (Datadog, Splunk) offer correlation with broader application telemetry at higher cost and complexity.
+Please ensure the project is actively maintained (releases within the last 12 months) and relevant to test execution and observability logging.
 
 ---
 
